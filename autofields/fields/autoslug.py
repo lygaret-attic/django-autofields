@@ -2,8 +2,6 @@ from django.db.models.fields import SlugField
 from django.template.defaultfilters import slugify
 from django.conf import settings
 
-from . import setting
-
 def countup(start=1):
     while True:
         yield start
@@ -72,7 +70,7 @@ class AutoSlugField(SlugField):
     def _gen_slugs(self, value):
         """ Generate an endless stream of slugs like: "slug", "slug-1", "slug-2", ... """
         yield value
-        format = setting("AUTOSLUG_FORMAT", "%s-%s")
+        format = getattr(settings,"AUTOSLUG_FORMAT","%s-%s")
         for i in countup():
             yield format % (value, i)
 

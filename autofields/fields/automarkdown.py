@@ -2,8 +2,6 @@ from django.db.models.fields import TextField
 from django.conf import settings
 from markdown import markdown
 
-from . import setting
-
 class AutoMarkdownTextField(TextField):
     """
     A field which auto populates with the value of the given field,
@@ -17,7 +15,7 @@ class AutoMarkdownTextField(TextField):
     def pre_save(self, model_instance, add):
         if self.prepopulate_from and not (self.only_on_create and model_instance.pk):
             base = getattr(model_instance, self.prepopulate_from)
-            text = markdown(base, setting("AUTOMARKDOWN_EXTENSIONS", []))
+            text = markdown(base, getattr(settings, "AUTOMARKDOWN_EXTENSIONS", []))
             setattr(model_instance, self.name, text)
             return text
         else:
